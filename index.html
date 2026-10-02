@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BANNED — Fingerboard Decks</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#080808;color:#fff;font-family:Arial,Helvetica,sans-serif}
+button,input,select,textarea{font:inherit}
+header{background:#050505;border-bottom:1px solid #222;padding:20px 6%;display:flex;justify-content:space-between;align-items:center;gap:20px;position:sticky;top:0;z-index:100}
+.logo{font-size:30px;font-weight:1000;letter-spacing:5px}.logo span,.section-title span{color:#e00000}
+nav{display:flex;gap:10px;flex-wrap:wrap}
+nav button,nav a{background:transparent;color:#fff;border:1px solid #333;padding:10px 14px;border-radius:8px;cursor:pointer;text-decoration:none}
+nav button:hover,nav a:hover{border-color:#e00000;color:#ff3030}
+.hero{min-height:570px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:70px 20px 40px;background:radial-gradient(circle at center,#3a0000,#120000 25%,#080808 65%)}
+.hero h1{font-size:clamp(55px,10vw,120px);line-height:.85;margin:0;font-weight:1000;letter-spacing:-4px}.hero h1 span{color:#e00000}
+.hero p{color:#bbb;letter-spacing:4px;font-weight:bold;margin:25px 0}
+.shop-button{background:#e00000;color:#fff;border:0;padding:16px 30px;border-radius:8px;font-weight:900;cursor:pointer;box-shadow:0 0 25px #e0000059}
+.shop-button:hover{background:#ff1717;transform:translateY(-2px)}
+.ribbon{width:100%;overflow:hidden;background:#e00000;border-top:2px solid #ff4545;border-bottom:2px solid #ff4545;padding:13px 0;white-space:nowrap;box-shadow:0 0 25px #e0000059}
+.ribbon-track{display:flex;width:max-content;animation:moveRibbon 18s linear infinite}.ribbon-item{font-size:15px;font-weight:1000;letter-spacing:2px;padding-right:55px}
+@keyframes moveRibbon{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.shop{padding:70px 6%;max-width:1400px;margin:auto}
+.section-title{font-size:42px;margin:0 0 8px;font-weight:1000}.subtitle{color:#888;margin-bottom:30px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:35px}
+.controls input,.controls select{background:#111;color:#fff;border:1px solid #333;padding:12px 14px;border-radius:8px}
+.controls button{background:#151515;color:#fff;border:1px solid #333;padding:12px 15px;border-radius:8px;cursor:pointer}
+.controls button.active,.controls button:hover{background:#e00000;border-color:#e00000}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.card{background:#111;border:1px solid #242424;border-radius:14px;padding:15px;position:relative;overflow:hidden;transition:.25s}
+.card:hover{transform:translateY(-6px);border-color:#e00000;box-shadow:0 12px 35px #e000002e}
+.badge{position:absolute;top:12px;left:12px;background:#e00000;color:#fff;padding:5px 8px;border-radius:5px;font-size:11px;font-weight:900;z-index:2}
+.wish{position:absolute;right:12px;top:12px;width:35px;height:35px;border-radius:50%;border:1px solid #444;background:#090909;color:#fff;cursor:pointer;z-index:2}.wish.liked{color:#ff2020;border-color:#e00000}
+.deck-box{height:190px;display:flex;justify-content:center;align-items:center;background:radial-gradient(circle,#222,#090909);border-radius:10px;margin-bottom:15px;overflow:hidden;cursor:pointer}
+.deck{width:65px;height:160px;border-radius:50% 50% 42% 42%;transform:rotate(90deg);box-shadow:0 0 15px #ffffff26,inset 0 0 0 4px #ffffff1f}
+.red{background:linear-gradient(90deg,#500000,#f00000,#550000)}.black{background:linear-gradient(90deg,#050505,#303030,#050505)}
+.fire{background:linear-gradient(90deg,#ff2600,#ff9900,#7a0000)}.white{background:linear-gradient(90deg,#ddd,#fff,#aaa)}
+.night{background:linear-gradient(90deg,#050019,#35008f,#050019)}.blue{background:linear-gradient(90deg,#001c50,#008cff,#001c50)}
+.toxic{background:linear-gradient(90deg,#153000,#72ff00,#153000)}.chrome{background:linear-gradient(90deg,#444,#eee,#555,#fff,#333)}
+.deck-image{max-width:90%;max-height:90%;object-fit:contain}
+.card h3{margin:5px 0;font-size:20px}.price{color:#ff3030;font-size:20px;font-weight:900}
+.stock{color:#5cff70;font-size:12px;font-weight:bold;margin:8px 0 14px}
+.card-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.card-actions button{padding:11px 7px;border-radius:7px;border:1px solid #333;background:#171717;color:#fff;cursor:pointer;font-weight:bold}
+.card-actions button:first-child{background:#e00000;border-color:#e00000}
+footer{border-top:1px solid #222;padding:40px 6%;color:#777;text-align:center}footer strong{color:#fff}
+.modal{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;padding:20px;z-index:500}.modal.show{display:flex}
+.modal-box{width:min(600px,100%);max-height:90vh;overflow-y:auto;background:#111;border:1px solid #333;border-radius:15px;padding:25px;box-shadow:0 0 50px #e0000040}
+.close{float:right;background:#222;border:1px solid #444;color:#fff;width:35px;height:35px;border-radius:50%;cursor:pointer}
+.size-buttons{display:flex;gap:8px;margin:15px 0}.size-buttons button{flex:1;padding:12px;background:#181818;color:#fff;border:1px solid #444;border-radius:7px;cursor:pointer}.size-buttons button.selected{background:#e00000;border-color:#e00000}
+.basket{position:fixed;right:-430px;top:0;width:min(430px,100%);height:100%;background:#0d0d0d;border-left:1px solid #333;z-index:400;transition:.3s;padding:25px;overflow-y:auto}.basket.open{right:0}
+.basket-item{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #252525}
+.qty{display:flex;align-items:center;gap:7px;margin-top:8px}.qty button{background:#222;color:#fff;border:1px solid #444;width:28px;height:28px;border-radius:5px;cursor:pointer}
+.remove{color:#ff3030;background:none;border:0;cursor:pointer}.total{font-size:25px;font-weight:1000;margin:25px 0}
+.checkout{width:100%;background:#e00000;color:#fff;border:0;padding:15px;border-radius:8px;cursor:pointer;font-weight:900}
+.owner-input,.owner-select,.owner-textarea{width:100%;padding:13px;margin:6px 0 12px;background:#181818;color:#fff;border:1px solid #444;border-radius:7px}
+.owner-textarea{min-height:90px;resize:vertical}.owner-label{display:block;margin-top:8px;font-weight:bold;color:#ccc}
+.owner-button{width:100%;padding:13px;border:0;border-radius:7px;background:#e00000;color:#fff;font-weight:900;cursor:pointer;margin-top:8px}.owner-button.dark{background:#222;border:1px solid #444}.owner-button.delete{background:#4b0000}
+.owner-note{color:#888;font-size:13px;line-height:1.5}.owner-deck{background:#181818;border:1px solid #333;padding:15px;border-radius:10px;margin:12px 0}
+.owner-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%) translateY(100px);background:#e00000;color:#fff;padding:13px 20px;border-radius:8px;font-weight:bold;transition:.3s;z-index:1000}.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:900px){.products{grid-template-columns:repeat(2,1fr)}header{flex-direction:column}}
+@media(max-width:550px){.products{grid-template-columns:1fr}.hero h1{font-size:55px}.section-title{font-size:32px}.owner-grid{grid-template-columns:1fr}}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">BAN<span>NED</span></div>
+<nav>
+<a href="#shop">SHOP</a>
+<button onclick="openBasket()">🛒 BASKET <span id="basketCount">0</span></button>
+<button onclick="showWishlist()">♡ WISHLIST</button>
+</nav>
+</header>
+
+<section class="hero">
+<h1>BAN<span>NED</span></h1>
+<p>BUILT TO RIDE. MADE TO STAND OUT.</p>
+<button class="shop-button" onclick="document.getElementById('shop').scrollIntoView()">OUR SHOP DECKS</button>
+</section>
+
+<div class="ribbon">
+<div class="ribbon-track">
+<div class="ribbon-item">⚡ BANNED DECKS</div>
+<div class="ribbon-item">BUILT TO RIDE</div>
+<div class="ribbon-item">NEW DROPS</div>
+<div class="ribbon-item">DECKS ONLY</div>
+<div class="ribbon-item">⚡ BANNED DECKS</div>
+<div class="ribbon-item">BUILT TO RIDE</div>
+<div class="ribbon-item">NEW DROPS</div>
+<div class="ribbon-item">DECKS ONLY</div>
+<div class="ribbon-item">⚡ BANNED DECKS</div>
+<div class="ribbon-item">BUILT TO RIDE</div>
+<div class="ribbon-item">NEW DROPS</div>
+<div class="ribbon-item">DECKS ONLY</div>
+<div class="ribbon-item">⚡ BANNED DECKS</div>
+<div class="ribbon-item">BUILT TO RIDE</div>
+<div class="ribbon-item">NEW DROPS</div>
+<div class="ribbon-item">DECKS ONLY</div>
+</div>
+</div>
+
+<section class="shop" id="shop">
+<h2 class="section-title">OUR <span>DECKS</span></h2>
+<p class="subtitle">Premium fingerboard decks. Decks only.</p>
+
+<div class="controls">
+<input id="search" placeholder="Search decks..." oninput="renderProducts()">
+<select id="sort" onchange="renderProducts()">
+<option value="featured">Featured</option>
+<option value="low">Price: Low → High</option>
+<option value="high">Price: High → Low</option>
+<option value="name">Name A → Z</option>
+</select>
+<button id="newFilter" onclick="toggleNew()">NEW</button>
+<button id="stockFilter" onclick="toggleStock()">IN STOCK</button>
+</div>
+
+<div class="products" id="products"></div>
+</section>
+
+<footer>
+<strong>BANNED</strong><br><br>
+Premium fingerboard decks.<br>
+© 2026 BANNED
+<br><br>
+<span style="font-size:11px;color:#333">Owner access: Ctrl + O</span>
+</footer>
+
+<div class="modal" id="productModal">
+<div class="modal-box">
+<button class="close" onclick="closeModal('productModal')">×</button>
+<div id="productDetails"></div>
+</div>
+</div>
+
+<div class="modal" id="checkoutModal">
+<div class="modal-box">
+<button class="close" onclick="closeModal('checkoutModal')">×</button>
+<h2>BANNED CHECKOUT</h2>
+<p>Demo checkout — no real payment is taken.</p>
+<input class="owner-input" placeholder="Name">
+<input class="owner-input" placeholder="Address">
+<input class="owner-input" placeholder="Postcode">
+<button class="checkout" onclick="placeOrder()">PLACE DEMO ORDER</button>
+</div>
+</div>
+
+<div class="basket" id="basket">
+<button class="close" onclick="closeBasket()">×</button>
+<h2>YOUR BASKET 🛒</h2>
+<div id="basketItems"></div>
+<div class="total">Total: £<span id="basketTotal">0.00</span></div>
+<input id="discountCode" class="owner-input" placeholder="Discount code">
+<button onclick="applyDiscount()" class="owner-button dark">APPLY CODE</button>
+<p id="discountMessage"></p>
+<button class="checkout" onclick="openCheckout()">CHECKOUT</button>
+</div>
+
+<div class="modal" id="ownerLoginModal">
+<div class="modal-box">
+<button class="close" onclick="closeModal('ownerLoginModal')">×</button>
+<h2>🔐 BANNED OWNER</h2>
+<p class="owner-note">Enter the owner password.</p>
+<input id="ownerPassword" type="password" class="owner-input" placeholder="Owner password" onkeydown="if(event.key==='Enter')ownerLogin()">
+<button class="owner-button" onclick="ownerLogin()">ENTER OWNER AREA</button>
+<p id="ownerLoginMessage" style="color:#ff3030"></p>
+</div>
+</div>
+
+<div class="modal" id="ownerModal">
+<div class="modal-box">
+<button class="close" onclick="closeOwnerArea()">×</button>
+<h2>🔥 BANNED OWNER AREA</h2>
+<p class="owner-note">Add, edit and delete decks. Changes are saved in this browser.</p>
+
+<button class="owner-button" onclick="showAddDeckForm()">➕ ADD NEW DECK</button>
+
+<div id="addDeckForm" style="display:none">
+<h3>ADD DECK</h3>
+
+<label class="owner-label">Deck name</label>
+<input id="newDeckName" class="owner-input" placeholder="Example: Bloodline">
+
+<div class="owner-grid">
+<div>
+<label class="owner-label">Price (£)</label>
+<input id="newDeckPrice" class="owner-input" type="number" step="0.01" placeholder="29.99">
+</div>
+
+<div>
+<label class="owner-label">Style</label>
+<select id="newDeckColour" class="owner-select">
+<option value="red">Red</option>
+<option value="black">Black</option>
+<option value="fire">Fire</option>
+<option value="white">White</option>
+<option value="night">Night</option>
+<option value="blue">Blue</option>
+<option value="toxic">Toxic</option>
+<option value="chrome">Chrome</option>
+</select>
+</div>
+</div>
+
+<label class="owner-label">Description</label>
+<textarea id="newDeckDescription" class="owner-textarea" placeholder="Describe your deck..."></textarea>
+
+<label class="owner-label">Image URL (optional)</label>
+<input id="newDeckImage" class="owner-input" placeholder="https://example.com/deck.jpg">
+
+<label class="owner-label">NEW badge?</label>
+<select id="newDeckNew" class="owner-select">
+<option value="true">YES</option>
+<option value="false">NO</option>
+</select>
+
+<button class="owner-button" onclick="addDeck()">ADD DECK TO SHOP</button>
+<button class="owner-button dark" onclick="hideAddDeckForm()">CANCEL</button>
+</div>
+
+<hr style="border-color:#333;margin:25px 0">
+<h3>YOUR DECKS</h3>
+<div id="ownerDeckList"></div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const defaultProducts=[
+{id:1,name:"Red Phantom",price:24.99,colour:"red",new:true,description:"A sharp red and black deck made for a clean street setup.",image:""},
+{id:2,name:"Blackout",price:29.99,colour:"black",new:false,description:"Stealth black styling with a classic BANNED feel.",image:""},
+{id:3,name:"Inferno",price:34.99,colour:"fire",new:false,description:"A fiery deck built to stand out.",image:""},
+{id:4,name:"White Strike",price:27.99,colour:"white",new:true,description:"Clean white styling with a powerful look.",image:""},
+{id:5,name:"Nightfall",price:31.99,colour:"night",new:false,description:"Dark purple and black styling for a night-time look.",image:""},
+{id:6,name:"Velocity",price:32.99,colour:"blue",new:false,description:"Fast-looking blue styling with a clean finish.",image:""},
+{id:7,name:"Toxic",price:28.99,colour:"toxic",new:true,description:"Bright toxic green styling for maximum attention.",image:""},
+{id:8,name:"Chrome",price:36.99,colour:"chrome",new:false,description:"Chrome-inspired styling with a premium look.",image:""}
+];
+
+let products=JSON.parse(localStorage.getItem("bannedProducts")||"null");
+if(!products)products=JSON.parse(JSON.stringify(defaultProducts));
+
+let basket=JSON.parse(localStorage.getItem("bannedBasket")||"[]");
+let wishlist=JSON.parse(localStorage.getItem("bannedWishlist")||"[]");
+let showNewOnly=false,showStockOnly=false,discount=0,selectedSize="34mm";
+
+function save(){
+localStorage.setItem("bannedProducts",JSON.stringify(products));
+localStorage.setItem("bannedBasket",JSON.stringify(basket));
+localStorage.setItem("bannedWishlist",JSON.stringify(wishlist));
+}
+
+function money(n){return Number(n).toFixed(2)}
+function escapeHtml(t){return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+
+function toast(m){
+const b=document.getElementById("toast");
+b.textContent=m;b.classList.add("show");
+setTimeout(()=>b.classList.remove("show"),1800);
+}
+
+function renderProducts(){
+const search=document.getElementById("search").value.toLowerCase();
+const sort=document.getElementById("sort").value;
+let list=products.filter(p=>p.name.toLowerCase().includes(search));
+
+if(showNewOnly)list=list.filter(p=>p.new);
+if(showStockOnly)list=list.filter(()=>true);
+if(sort==="low")list.sort((a,b)=>a.price-b.price);
+if(sort==="high")list.sort((a,b)=>b.price-a.price);
+if(sort==="name")list.sort((a,b)=>a.name.localeCompare(b.name));
+
+document.getElementById("products").innerHTML=list.map(p=>`
+<div class="card">
+${p.new?'<div class="badge">NEW</div>':''}
+<button class="wish ${wishlist.includes(p.id)?"liked":""}" onclick="toggleWishlist(${p.id})">${wishlist.includes(p.id)?"♥":"♡"}</button>
+<div class="deck-box" onclick="openProduct(${p.id})">
+${p.image?
+`<img class="deck-image" src="${escapeHtml(p.image)}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="deck ${p.colour}" style="display:none"></div>`
+:`<div class="deck ${p.colour}"></div>`}
+</div>
+<h3>${escapeHtml(p.name)}</h3>
+<div class="price">£${money(p.price)}</div>
+<div class="stock">● IN STOCK</div>
+<div class="card-actions">
+<button onclick="openProduct(${p.id})">DETAILS</button>
+<button onclick="addToBasket(${p.id})">ADD</button>
+</div>
+</div>`).join("");
+}
+
+function toggleNew(){
+showNewOnly=!showNewOnly;
+document.getElementById("newFilter").classList.toggle("active",showNewOnly);
+renderProducts();
+}
+
+function toggleStock(){
+showStockOnly=!showStockOnly;
+document.getElementById("stockFilter").classList.toggle("active",showStockOnly);
+renderProducts();
+}
+
+function toggleWishlist(id){
+if(wishlist.includes(id)){wishlist=wishlist.filter(x=>x!==id);toast("Removed from wishlist")}
+else{wishlist.push(id);toast("Added to wishlist ❤️")}
+save();renderProducts();
+}
+
+function showWishlist(){
+const names=wishlist.map(id=>products.find(p=>p.id===id)).filter(Boolean).map(p=>p.name);
+if(!names.length){toast("Your wishlist is empty");return}
+alert("YOUR BANNED WISHLIST\n\n"+names.join("\n"));
+}
+
+function addToBasket(id,size="34mm"){
+const existing=basket.find(x=>x.id===id&&x.size===size);
+if(existing)existing.qty++;
+else basket.push({id,size,qty:1});
+save();renderBasket();updateBasketCount();toast("Added to basket 🛹");
+}
+
+function updateBasketCount(){
+document.getElementById("basketCount").textContent=basket.reduce((t,x)=>t+x.qty,0);
+}
+
+function renderBasket(){
+const box=document.getElementById("basketItems");
+basket=basket.filter(item=>products.some(p=>p.id===item.id));
+
+if(!basket.length){
+box.innerHTML="<p>Your basket is empty.</p>";
+document.getElementById("basketTotal").textContent="0.00";
+return;
+}
+
+let total=0;
+
+box.innerHTML=basket.map((item,index)=>{
+const p=products.find(x=>x.id===item.id);
+const line=p.price*item.qty;
+total+=line;
+
+return`
+<div class="basket-item">
+<div>
+<strong>${escapeHtml(p.name)}</strong>
+<div>${item.size}</div>
+<div>£${money(line)}</div>
+<div class="qty">
+<button onclick="changeQty(${index},-1)">−</button>
+<span>${item.qty}</span>
+<button onclick="changeQty(${index},1)">+</button>
+</div>
+</div>
+<button class="remove" onclick="removeItem(${index})">REMOVE</button>
+</div>`;
+}).join("");
+
+document.getElementById("basketTotal").textContent=money(total*(1-discount));
+save();
+}
+
+function changeQty(i,a){
+basket[i].qty+=a;
+if(basket[i].qty<=0)basket.splice(i,1);
+save();renderBasket();updateBasketCount();
+}
+
+function removeItem(i){
+basket.splice(i,1);
+save();renderBasket();updateBasketCount();toast("Removed from basket");
+}
+
+function openBasket(){document.getElementById("basket").classList.add("open");renderBasket()}
+function closeBasket(){document.getElementById("basket").classList.remove("open")}
+
+function applyDiscount(){
+const code=document.getElementById("discountCode").value.trim().toUpperCase();
+
+if(code==="BANNED10"){
+discount=.10;
+document.getElementById("discountMessage").textContent="10% discount applied 🔥";
+}else{
+discount=0;
+document.getElementById("discountMessage").textContent="Invalid code.";
+}
+renderBasket();
+}
+
+function openProduct(id){
+const p=products.find(x=>x.id===id);
+if(!p)return;
+
+const visual=p.image?
+`<img class="deck-image" src="${escapeHtml(p.image)}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="deck ${p.colour}" style="display:none"></div>`
+:`<div class="deck ${p.colour}"></div>`;
+
+document.getElementById("productDetails").innerHTML=`
+<div class="deck-box">${visual}</div>
+<h2>${escapeHtml(p.name)}</h2>
+<div class="price">£${money(p.price)}</div>
+<p>${escapeHtml(p.description)}</p>
+<p><strong>WIDTH:</strong> 32 / 34 / 36mm</p>
+<p><strong>SHAPE:</strong> Popsicle</p>
+<p><strong>CONSTRUCTION:</strong> 5-Ply Maple</p>
+<p><strong>CONCAVE:</strong> Medium</p>
+<p><strong>INCLUDED:</strong> Deck Only</p>
+<h3>Choose Size</h3>
+<div class="size-buttons">
+<button onclick="selectSize(this,'32mm')">32mm</button>
+<button class="selected" onclick="selectSize(this,'34mm')">34mm</button>
+<button onclick="selectSize(this,'36mm')">36mm</button>
+</div>
+<button class="checkout" onclick="addSelectedProduct(${p.id})">ADD TO BASKET</button>`;
+
+selectedSize="34mm";
+document.getElementById("productModal").classList.add("show");
+}
+
+function selectSize(b,s){
+document.querySelectorAll(".size-buttons button").forEach(x=>x.classList.remove("selected"));
+b.classList.add("selected");selectedSize=s;
+}
+
+function addSelectedProduct(id){
+addToBasket(id,selectedSize);
+closeModal("productModal");
+openBasket();
+}
+
+function closeModal(id){document.getElementById(id).classList.remove("show")}
+
+function openCheckout(){
+if(!basket.length){toast("Your basket is empty");return}
+document.getElementById("checkoutModal").classList.add("show");
+}
+
+function placeOrder(){
+alert("BANNED DEMO ORDER\n\nThanks for your order! 🛹\n\nThis is a demo checkout — no payment was taken.");
+basket=[];discount=0;
+save();renderBasket();updateBasketCount();
+closeModal("checkoutModal");closeBasket();
+}
+
+/* OWNER */
+function openOwnerLogin(){
+document.getElementById("ownerPassword").value="";
+document.getElementById("ownerLoginMessage").textContent="";
+document.getElementById("ownerLoginModal").classList.add("show");
+setTimeout(()=>document.getElementById("ownerPassword").focus(),100);
+}
+
+function ownerLogin(){
+if(document.getElementById("ownerPassword").value==="blacklash321"){
+closeModal("ownerLoginModal");openOwnerArea();
+}else document.getElementById("ownerLoginMessage").textContent="Incorrect password.";
+}
+
+function openOwnerArea(){
+renderOwnerDecks();
+document.getElementById("ownerModal").classList.add("show");
+}
+
+function closeOwnerArea(){
+document.getElementById("ownerModal").classList.remove("show");
+hideAddDeckForm();
+}
+
+function showAddDeckForm(){document.getElementById("addDeckForm").style.display="block"}
+function hideAddDeckForm(){document.getElementById("addDeckForm").style.display="none"}
+
+function addDeck(){
+const name=document.getElementById("newDeckName").value.trim();
+const price=Number(document.getElementById("newDeckPrice").value);
+const colour=document.getElementById("newDeckColour").value;
+const description=document.getElementById("newDeckDescription").value.trim();
+const image=document.getElementById("newDeckImage").value.trim();
+const isNew=document.getElementById("newDeckNew").value==="true";
+
+if(!name){alert("Please enter a deck name.");return}
+if(!price||price<=0){alert("Please enter a valid price.");return}
+
+const id=products.length?Math.max(...products.map(p=>Number(p.id)))+1:1;
+
+products.push({
+id,name,price,colour,new:isNew,
+description:description||"A new BANNED fingerboard deck.",
+image
+});
+
+save();renderProducts();renderOwnerDecks();
+
+document.getElementById("newDeckName").value="";
+document.getElementById("newDeckPrice").value="";
+document.getElementById("newDeckDescription").value="";
+document.getElementById("newDeckImage").value="";
+
+hideAddDeckForm();
+toast(name+" added to BANNED 🔥");
+}
+
+function renderOwnerDecks(){
+const box=document.getElementById("ownerDeckList");
+
+box.innerHTML=products.map(p=>`
+<div class="owner-deck">
+<strong>${escapeHtml(p.name)}</strong>
+<p class="owner-note">£${money(p.price)} • ${p.new?"NEW":"NORMAL"}</p>
+<button class="owner-button" onclick="editDeck(${p.id})">✏️ EDIT</button>
+<button class="owner-button delete" onclick="deleteDeck(${p.id})">🗑️ DELETE</button>
+</div>`).join("");
+}
+
+function editDeck(id){
+const p=products.find(x=>x.id===id);
+if(!p)return;
+
+const name=prompt("Deck name:",p.name);
+if(name===null)return;
+const price=prompt("Price (£):",p.price);
+if(price===null)return;
+const description=prompt("Description:",p.description);
+if(description===null)return;
+const image=prompt("Image URL:",p.image||"");
+if(image===null)return;
+
+p.name=name.trim()||p.name;
+p.price=Number(price)>0?Number(price):p.price;
+p.description=description.trim()||p.description;
+p.image=image.trim();
+p.new=confirm("Should this deck have the NEW badge?");
+
+save();renderProducts();renderOwnerDecks();
+toast(p.name+" updated ✏️");
+}
+
+function deleteDeck(id){
+const p=products.find(x=>x.id===id);
+if(!p)return;
+
+if(!confirm("Delete "+p.name+" from BANNED?"))return;
+
+products=products.filter(x=>x.id!==id);
+wishlist=wishlist.filter(x=>x!==id);
+basket=basket.filter(x=>x.id!==id);
+
+save();renderProducts();renderBasket();updateBasketCount();renderOwnerDecks();
+toast("Deck deleted 🗑️");
+}
+
+document.addEventListener("keydown",e=>{
+if(e.ctrlKey&&e.key.toLowerCase()==="o"){
+e.preventDefault();
+openOwnerLogin();
+}
+if(e.key==="Escape"){
+closeModal("productModal");
+closeModal("checkoutModal");
+closeModal("ownerLoginModal");
+closeOwnerArea();
+}
+});
+
+renderProducts();
+renderBasket();
+updateBasketCount();
+</script>
+
+</body>
+</html>
